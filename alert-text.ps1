@@ -1,6 +1,6 @@
 #more changes
 
-
+# another comment
 #test comment
 $properties = @{
     to         = 'xxxxxxxxxx@vtext.com'
@@ -11,3 +11,6 @@ $properties = @{
     }
 
 Send-MailMessage @properties 
+
+
+# another comment
