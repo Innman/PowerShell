@@ -14,3 +14,4 @@ Send-MailMessage @properties
 
 #one more test comment
 # another comment
+Get-Process
