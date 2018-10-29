@@ -1,2 +1,4 @@
 # PowerShell
-PowerShell fun and such
+PowerShell tools and scripts to make things easier.
+
+
