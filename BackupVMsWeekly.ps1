@@ -2,6 +2,8 @@
 # We use the code from below link to copy only one disk (for the special cases)
 # https://stackoverflow.com/questions/14207788/accessing-volume-shadow-copy-vss-snapshots-from-powershell
 #Password for encrypting files to Google
+
+#Need to remove this for parameter block
 $FilePassword="Password"
 
 # In Robocopy statements below, we have an IPG of 175. This seems to be about right for keeping the 
@@ -121,14 +123,15 @@ foreach ($VM in $AllVMs)
       }
     }
 }
-$SMTPUserName="SpecialUser@prairie.edu"
+$SMTPUserName="username@domain.com"
 $SMTPPassword= convertto-securestring "SpecialUserPassword" -asplaintext -force
 $SMTPCreds= New-Object -TypeName pscredential -ArgumentList $SMTPUserName, $SMTPPassword
 $SMTPBody="See attached Log File"
 $SMTPSubject="Weekly Backup Log results"
 $SMTPAttachment="c:\backupbatch\" + $LogFileName
-Send-MailMessage -From "ServerHostBackup@prairie.edu" -to "system@prairie.edu" -subject $SMTPSubject `
+Send-MailMessage -From "ServerHostBackup@domain.com" -to "system@domain.com" -subject $SMTPSubject `
 -Body $SMTPBody -SmtpServer "smtp.gmail.com" -Port "587" -UseSsl -Credential $SMTPCreds `
 -Attachments $SMTPAttachment
+
 # Remove our stamp on the running file so another Powershell backup can begin (if it's waiting)
 remove-item $PSRunningFileName
