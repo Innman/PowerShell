@@ -21,11 +21,11 @@ while ($true) {
 
     $logTime = get-date -Format HH:mm  
     $EMailBody = $EMailBody + ", end: " + $logTime
-    $Username = "SpecialUser@prairie.edu"
+    $Username = "username@domain.com"
     $pass = convertto-securestring "SpecialUserPassword" -asplaintext -force
     $mycreds = new-object -typename PSCredential -Argumentlist $UserName, $pass
     $SubjectTitle = "Backup to GDrive results for " + $ZipFileName
-    send-mailmessage -From "ServerHostBackup@prairie.edu" -to "system@prairie.edu" -subject $SubjectTitle `
+    send-mailmessage -From "ServerHostBackup@domain.com" -to "admin@domain.com" -subject $SubjectTitle `
     -Body $emailbody -SmtpServer "smtp.gmail.com" -port "587" -UseSsl -Credential $mycreds 
     
   }
