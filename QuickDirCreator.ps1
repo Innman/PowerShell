@@ -1,3 +1,13 @@
+<#.SYNOPSIS
+This script will create MyDocument Directories and assign permissions for a group of users.
+
+.DESCRIPTION
+The script pulls users from an OU in Active Directory and create a new MyDocument folder if it does not already exist in the target directory. The script also sets folder permission for the user.
+
+.EXAMPLE
+./QuickDirCreator.ps1
+#>
+
 $dirPath = "C:\temp\"
 
 
