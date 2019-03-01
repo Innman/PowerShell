@@ -1,4 +1,5 @@
-<#.SYNOPSIS
+<#
+.SYNOPSIS
 This script will create MyDocument Directories and assign permissions for a group of users.
 
 .DESCRIPTION
