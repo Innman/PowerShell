@@ -1,4 +1,5 @@
-<#.SYNOPSIS
+<#
+.SYNOPSIS
 This cmdlet will change the name of a user in AD. 
 
 .DESCRIPTION
