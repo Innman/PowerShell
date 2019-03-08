@@ -34,4 +34,11 @@ function Rename-User {
     Write-Verbose "Verifying Account for $OldLastName, $OldFirstName.."
     Write-Verbose "Checking user account ID..."
     Write-verbose "ID: $EmployeeID matches to account $OldFirstName$OldLastName."
+
+    <#Find AD user with $EmployeeID and check to see if sam.accountname = $username
+        If both are match the selected user from AD, change the name
+        Format = Last, First
+
+    #>
+}
 }
