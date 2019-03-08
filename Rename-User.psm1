@@ -13,15 +13,25 @@ function Rename-User {
     [cmdletbinding()]
 
     param (
-    [Alias('Name','Identity')]
-    [string] $Username,
-    [string] $Newname,
-    [Parameter (Mandatory=$true,HelpMessage = 'Return all computers matching this prefix, e.g., lh-133')]
+    [Parameter (Mandatory=$true)]
+    [string] $OldFirstName,
+   
+    [Parameter (Mandatory=$true)]
+    [string] $OldLastName,
+    
+    [Parameter (Mandatory=$true)]
+    [string] $NewFirstName,
+    
+    [Parameter (Mandatory=$true)]
+    [string] $NewLastName,
+    
+    [Parameter (Mandatory=$true, HelpMessage = 'Enter Id number: xxxxxx')]
     [ValidatePattern("^\d{6}$")]
     [Alias('StudentID','Id')]
     [string] $EmployeeID
     ) # end param
 
-    Write-Host "Doing Stuff"
-    Write-Verbose "Doing verbose stuff with $Username"
+    Write-Verbose "Verifying Account for $OldLastName, $OldFirstName.."
+    Write-Verbose "Checking user account ID..."
+    Write-verbose "ID: $EmployeeID matches to account $OldFirstName$OldLastName."
 }
