@@ -57,10 +57,5 @@ function Rename-User {
         exit
     }
 
-    <#Find AD user with $EmployeeID and check to see if sam.accountname = $username
-        If both are match the selected user from AD, change the name
-        Format = Last, First
-
-    #>
     
 }
