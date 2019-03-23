@@ -25,6 +25,7 @@ If both events return true then the name change is carried out.
 ## EXAMPLES
 
 ### EXAMPLE 1
+This will find the user John Smith with the ID of 123456 and change the name to John Doe
 ```
 Rename-User -OldFirstName John -OldLastName Smith -NewFirstName John -NewLastName Doe -EmployeeID 123456
 ```
