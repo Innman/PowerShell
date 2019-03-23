@@ -7,7 +7,7 @@ This cmdlet will change the username and email of an individual in AD. The funct
 If both events return true then the name change is carried out.
 
 .EXAMPLE
-Rename-User -identity "John Smith" -Newname "John Doe" -EmployeeID "123456"
+Rename-User -OldFirstName John -OldLastName Smith -NewFirstName John -NewLastName Doe -EmployeeID 123456
 #>
 function Rename-User {
     [cmdletbinding()]
