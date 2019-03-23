@@ -32,7 +32,7 @@ Rename-User -identity "John Smith" -Newname "John Doe" -EmployeeID "123456"
 ## PARAMETERS
 
 ### -OldFirstName
-{{ Fill OldFirstName Description }}
+{{ This is the old first name of the user being acted upon. }}
 
 ```yaml
 Type: String
@@ -47,7 +47,7 @@ Accept wildcard characters: False
 ```
 
 ### -OldLastName
-{{ Fill OldLastName Description }}
+{{ This is the old last name of the user being acted upon. }}
 
 ```yaml
 Type: String
@@ -62,7 +62,7 @@ Accept wildcard characters: False
 ```
 
 ### -NewFirstName
-{{ Fill NewFirstName Description }}
+{{ This is the new first name of the user being acted upon. }}
 
 ```yaml
 Type: String
@@ -77,7 +77,7 @@ Accept wildcard characters: False
 ```
 
 ### -NewLastName
-{{ Fill NewLastName Description }}
+{{ This is the new last name of the user being acted upon. }}
 
 ```yaml
 Type: String
