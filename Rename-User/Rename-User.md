@@ -26,13 +26,13 @@ If both events return true then the name change is carried out.
 
 ### EXAMPLE 1
 ```
-Rename-User -identity "John Smith" -Newname "John Doe" -EmployeeID "123456"
+Rename-User -OldFirstName John -OldLastName Smith -NewFirstName John -NewLastName Doe -EmployeeID 123456
 ```
 
 ## PARAMETERS
 
 ### -OldFirstName
-{{ This is the old first name of the user being acted upon. }}
+This is the old first name of the user being acted upon.
 
 ```yaml
 Type: String
@@ -47,7 +47,7 @@ Accept wildcard characters: False
 ```
 
 ### -OldLastName
-{{ This is the old last name of the user being acted upon. }}
+This is the old last name of the user being acted upon.
 
 ```yaml
 Type: String
@@ -62,7 +62,7 @@ Accept wildcard characters: False
 ```
 
 ### -NewFirstName
-{{ This is the new first name of the user being acted upon. }}
+This is the new first name of the user being acted upon.
 
 ```yaml
 Type: String
@@ -77,7 +77,7 @@ Accept wildcard characters: False
 ```
 
 ### -NewLastName
-{{ This is the new last name of the user being acted upon. }}
+This is the new last name of the user being acted upon.
 
 ```yaml
 Type: String
