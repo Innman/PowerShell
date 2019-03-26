@@ -26,14 +26,14 @@ function Rename-User {
     [string] $NewLastName,
     
     [Parameter (Mandatory=$true, HelpMessage = 'Enter Id number: xxxxxx')]
-    [ValidatePattern("^\d{6}$")]
+    [ValidatePattern("^\d{7}$")]
     [Alias('StudentID','Id')]
     [string] $EmployeeID
     ) # end param
 
     #Checking to see if account name exist in AD
     $identity = "$OldFirstName$OldLastName"
-
+    $newIdentity = "$NewFirstName$NewLastName"
     Write-Verbose "Verifying Account for $identity..."
     try{
         $user = Get-ADUser -Identity $identity -Properties * 
@@ -47,6 +47,7 @@ function Rename-User {
         exit
     }
     
+    Write-Verbose "##################################"
     Write-Verbose "Checking user account ID..."
     if ($user.EmployeeID -eq  $EmployeeID){
         Write-Verbose "ID: $EmployeeID matches to account $OldFirstName$OldLastName."
@@ -56,6 +57,26 @@ function Rename-User {
         Write-Error "ID: $EmployeeID does not match to account $OldFirstName$OldLastName. Please check input parameters and try again."
         exit
     }
+    try{
+        Write-Verbose "##################################"
+        Write-Verbose "Setting SamAccountName to" $newIdentity
+        Set-ADUser -Identity $identity -SamAccountName $newIdentity
+    }
+    catch{
+        Write-Error "Unable to set SamAccountName to new value on user" $identity       
+    }
 
-    
+    try {
+        $newUser = Get-ADUser -Identity $newIdentity -Properties *
+        $upn = ($newUser.SamAccountName)+"@letu.edu"
+        Write-Verbose "##################################"
+        Write-Verbose "Setting UserPrincipalName to: $upn"
+        Write-Verbose "Setting Given Name to:" $newUser.SamAccountName
+        Set-ADUser -Identity $newIdentity -UserPrincipalName $upn -GivenName $newUser.SamAccountName
+    }
+
+    catch {
+        write-Error "Unable to UPN or Given Name on user: $newIdentity. Please make sure you are using this module with elevated access."
+    }
+
 }
