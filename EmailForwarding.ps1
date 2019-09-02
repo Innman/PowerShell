@@ -4,9 +4,15 @@
 
 $UserCredential = Get-Credential
 Connect-MsolService -Credential $UserCredential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri <ConnectionURI> -Credential $UserCredential -Authentication Basic -AllowRedirection
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "<ConnectionURI>" -Credential $UserCredential -Authentication Basic -AllowRedirection
 Import-PSSession $Session
 
+Function LogWrite
+{
+   Param ([string]$logstring)
+
+   Add-content $Logfile -value $logstring
+}
 
 $users = Import-Csv -Path .\EmailForwarding.csv -Header 'Name','ExternalAddress'
 foreach ($user in $users) {
@@ -17,5 +23,5 @@ foreach ($user in $users) {
 
 #check to verify forwarding address is set
 foreach ($user in $users) {
-    get-Mailbox $user.name | select Name, ForwardingSMTPAddress, DeliverToMailboxAndForward
+    get-Mailbox $user.name | Select-Object Name, ForwardingSMTPAddress, DeliverToMailboxAndForward
 }
