@@ -92,7 +92,7 @@ function Rename-User {
     }
     try{
         Write-Verbose "Setting remote mailbox attributes on $identity" 
-        Set-RemoteMailbox -Identity $identity -Alias $newIdentity -RemoteRoutingAddress $($newIdentity+"@letnet.mail.onmicrosoft.com")
+        Set-RemoteMailbox -Identity $identity -Alias $newIdentity -RemoteRoutingAddress $($newIdentity+"@domain.onmicrosoft.com")
     }
     catch{
         Write-Error "Unable to set new values on the remote mailbox for" $identity
