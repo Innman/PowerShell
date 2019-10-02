@@ -10,7 +10,7 @@ If both events return true then the name change is carried out.
 Rename-User -OldFirstName John -OldLastName Smith -NewFirstName John -NewLastName Doe -EmployeeID 123456
 #>
 function Rename-User {
-    [cmdletbinding()]
+    [cmdletbinding(SupportsShouldProcess=$True)]
 
     param (
     [Parameter (Mandatory=$true)]
@@ -25,8 +25,8 @@ function Rename-User {
     [Parameter (Mandatory=$true)]
     [string] $NewLastName,
     
-    [Parameter (Mandatory=$true, HelpMessage = 'Enter Id number: xxxxxx')]
-    [ValidatePattern("^\d{7}$")]
+    [Parameter (Mandatory=$true, HelpMessage = 'Enter Id number: xxxxxxx')]
+    [ValidatePattern("^\d{2}$")]
     [Alias('StudentID','Id')]
     [string] $EmployeeID
     ) # end param
@@ -34,20 +34,20 @@ function Rename-User {
     #Checking to see if account name exist in AD
     $identity = "$OldFirstName$OldLastName"
     $newIdentity = "$NewFirstName$NewLastName"
+    
     Write-Verbose "Verifying Account for $identity..."
     try{
         $user = Get-ADUser -Identity $identity -Properties * 
         if ($user){
             Write-Verbose "User: $identity found in Active Directory."
+            $domain = ($user.UserPrincipalName).Substring(($user.UserPrincipalName).IndexOf('@'))
         }
     }
     catch{
         Write-Verbose "User: $identity was not found Active Directory."
         Write-Error "User: $identity was not found Active Directory. Please check input parameters and try again."
-        exit
+        
     }
-    
-    Write-Verbose "##################################"
     Write-Verbose "Checking user account ID..."
     if ($user.EmployeeID -eq  $EmployeeID){
         Write-Verbose "ID: $EmployeeID matches to account $OldFirstName$OldLastName."
@@ -55,28 +55,54 @@ function Rename-User {
     else{
         Write-Verbose "ID: $EmployeeID does not match to account $OldFirstName$OldLastName."
         Write-Error "ID: $EmployeeID does not match to account $OldFirstName$OldLastName. Please check input parameters and try again."
-        exit
+        
     }
+
     try{
         Write-Verbose "##################################"
-        Write-Verbose "Setting SamAccountName to" $newIdentity
-        Set-ADUser -Identity $identity -SamAccountName $newIdentity
+        Write-Verbose "Setting SamAccountName to $newIdentity" 
+        Set-ADUser -Identity $user.ObjectGUID -SamAccountName $newIdentity
     }
     catch{
-        Write-Error "Unable to set SamAccountName to new value on user" $identity       
+        Write-Error "Unable to set SamAccountName to new value on user"     
+        
     }
 
     try {
-        $newUser = Get-ADUser -Identity $newIdentity -Properties *
-        $upn = ($newUser.SamAccountName)+"@letu.edu"
+        $newUser = Get-ADUser -Identity $user.ObjectGUID -Properties *
+        $upn = ($newUser.SamAccountName)+$domain
         Write-Verbose "##################################"
         Write-Verbose "Setting UserPrincipalName to: $upn"
-        Write-Verbose "Setting Given Name to:" $newUser.SamAccountName
-        Set-ADUser -Identity $newIdentity -UserPrincipalName $upn -GivenName $newUser.SamAccountName
+        Write-Verbose "Setting Given Name to:" #$newUser.SamAccountName
+        Set-ADUser -Identity $user.ObjectGUID -UserPrincipalName $upn -GivenName $newUser.SamAccountName
     }
-
     catch {
-        write-Error "Unable to UPN or Given Name on user: $newIdentity. Please make sure you are using this module with elevated access."
+        write-Error "Unable to change UPN or Given Name on user: $newIdentity. Please make sure you are using this module with elevated access."
+        
+    }
+    try{
+        Write-Verbose "Getting credentials for Exchange"
+        $excred = Get-Credential -Message "Enter credentials for remote mailbox management"
+        $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "connection point" -Credential $excred -Authentication Kerberos
+        Import-PSSession $Session
+    }
+    catch{
+        Write-Error "There was an issue with the exchange management login. Please check the credentials and make sure the accounts has permissions need to change mailbox settings."
+        
+    }
+    try{
+        Write-Verbose "Setting remote mailbox attributes on $identity" 
+        Set-RemoteMailbox -Identity $identity -Alias $newIdentity -RemoteRoutingAddress $($newIdentity+"@letnet.mail.onmicrosoft.com")
+    }
+    catch{
+        Write-Error "Unable to set new values on the remote mailbox for" $identity
+        
     }
 
+    Write-Verbose "Setting name attribute on $newIdentity" 
+    Set-ADUser -Identity $user.ObjectGUID -Replace @{name="$newIdentity"}
+    Write-Verbose "Setting display name attribute on $newIdentity" 
+    Set-ADUser -Identity $user.ObjectGUID -Replace @{displayname="$NewLastName, $NewFirstName"}
+    Write-Verbose "Setting surname attribute on $newIdentity" 
+    Set-ADUser -Identity $user.ObjectGUID -Replace @{sn="$NewLastName"}
 }
